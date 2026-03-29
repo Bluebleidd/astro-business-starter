@@ -1,8 +1,12 @@
 # Astro Service-Based Business Template & CMS
 
+** [Live Demo: astro-business-starter.pages.dev](https://astro-business-starter.pages.dev/)**
+
 A high-performance website template designed specifically for local service businesses. 
 
 This project demonstrates how to bridge the gap between blazing-fast static site generation (SSG) and dynamic, client-friendly content management without relying on heavy databases or traditional monolith CMS platforms like WordPress.
+
+
 
 ## About The Project
 
