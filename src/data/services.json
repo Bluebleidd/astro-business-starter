@@ -1,0 +1,30 @@
+{
+  "title": "[Our Services]",
+  "hero_title_1": "[Your Service]",
+  "hero_title_2": "[Value proposition and benefits.]",
+  "hero_image_before": "/placeholder.svg",
+  "hero_image_after": "/placeholder.svg",
+  "hero_features": [
+    "[Feature 1]",
+    "[Feature 2]",
+    "[Feature 3]",
+    "[Feature 4]"
+  ],
+  "services": [
+    {
+      "icon": "Hand",
+      "title": "[Service 1 Title]",
+      "description": "[Description for service 1.]"
+    },
+    {
+      "icon": "Sparkles",
+      "title": "[Service 2 Title]",
+      "description": "[Description for service 2.]"
+    },
+    {
+      "icon": "ShieldCheck",
+      "title": "[Service 3 Title]",
+      "description": "[Description for service 3.]"
+    }
+  ]
+}

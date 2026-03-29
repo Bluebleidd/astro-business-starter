@@ -1,0 +1,247 @@
+---
+import { MapPin, Phone, Mail, Facebook, Instagram } from 'lucide-astro';
+import contactData from '../data/contact.json';
+const currentYear = new Date().getFullYear();
+---
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>[Your Company Name]</h3>
+        <p>[Short company description or tagline]</p>
+      </div>
+      
+      <div class="footer-details">
+        <div class="contact-wrapper">
+          <div class="contact-item">
+            <MapPin size={18} />
+            <a 
+              href={contactData.googleMapsLink} 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              {contactData.address},<br />{contactData.city}
+            </a>
+          </div>
+          
+          <div class="contact-item">
+            <Phone size={18} />
+            <a href={`tel:+48${contactData.phoneLink}`}>{contactData.phone}</a>
+          </div>
+          
+          <div class="contact-item">
+            <Mail size={18} />
+            <a href={`mailto:${contactData.email}`}>{contactData.email}</a>
+          </div>
+          
+          <div class="contact-item">
+            <Facebook size={18} />
+            <a 
+              href={contactData.facebook} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              aria-label="[Visit our Facebook profile]"
+            >
+              [Like us on Facebook]
+            </a>
+          </div>
+
+          <div class="contact-item">
+            <Instagram size={18} />
+            <a 
+              href={contactData.instagram} 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              [Follow us on Instagram]
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+  <div class="footer-bottom">
+    <div class="footer-bottom-container">
+      <p>© {currentYear} [Your Company Name]</p>
+      <div class="footer-links">
+        <a href="/polityka-prywatnosci">[Privacy Policy]</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    background-color: var(--color-primary-light); 
+    border-top: none; 
+    padding: 4rem 2rem 0 2rem; 
+    margin-top: auto;
+    color: white;
+    overflow: hidden; 
+  }
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-bottom: 3rem;
+  }
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  .footer-brand h3 {
+    color: white; 
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+  }
+  .footer-brand p {
+    color: var(--color-lavender-light); 
+    margin: 0;
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
+  .footer-details {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: flex-end;
+  }
+  .contact-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+    width: fit-content;
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: white;
+    text-align: left;
+  }
+  .contact-item :global(svg) {
+    color: var(--color-accent);
+    flex-shrink: 0;
+  }
+  .contact-item p, .contact-item a {
+    color: white; 
+    margin: 0;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    line-height: 1.4;
+  }
+  .contact-item a:hover {
+    color: #C4A77D;
+  }
+
+  .footer-bottom {
+    background-color: var(--color-primary-dark); 
+    padding: 1.5rem 2rem;
+    margin: 0 -2rem; 
+    width: auto; 
+  }
+
+  .footer-bottom-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-bottom p {
+    color: var(--color-lavender-light); 
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .footer-links {
+    display: flex;
+    align-items: center;
+  }
+
+  .footer-links a {
+    color: var(--color-accent); 
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  .footer-links a:hover {
+    color: var(--color-white); 
+  }
+
+  @media (max-width: 768px) {
+    footer {
+      padding: 3rem 0 0 0;
+    }
+
+    .footer-container {
+      padding: 0 1rem;
+    }
+
+    .footer-content {
+      flex-direction: column;
+      text-align: center;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    .footer-details {
+      align-items: center;
+      width: 100%;
+    }
+
+    .contact-wrapper {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      width: auto;
+      max-width: 290px;
+      margin: 0 auto; 
+    }
+
+    .contact-item {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 0.75rem;
+      text-align: left;
+    }
+
+    .contact-item p, .contact-item a {
+      text-align: left;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      margin: 0;
+      color: white;
+    }
+
+    .contact-item :global(svg) {
+      margin-top: 3px;
+      flex-shrink: 0;
+      color: #C4A77D;
+    }
+
+    .footer-bottom {
+      padding: 1.5rem 1rem;
+    }
+
+    .footer-bottom-container {
+      flex-direction: column;
+      text-align: center;
+      gap: 1.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+import Layout from '../layouts/Layout.astro';
+import pricingData from '../data/pricing.json';
+---
+
+<Layout title="[Pricing Page Title] | [Your Company Name]">
+  <div class="section-container">
+    <header class="section-title">
+      <h1>{pricingData.title}</h1>
+    </header>
+
+    <div class="pricing-list">
+      {pricingData.categories.map((cat: any) => (
+        <div class="price-category card-base">
+          <h2 class="category-title">{cat.category_name}</h2>
+          <ul>
+            {cat.services.map((item: any) => (
+              <li>
+                <span class="service-name">{item.service_name}</span> 
+                <span class="price-value">{item.price} $</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+    
+    <p class="pricing-disclaimer">
+      [Disclaimer: Prices are subject to change.]
+    </p>
+  </div>
+</Layout>
+
+<style>
+  .price-subtitle {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: var(--color-primary-medium);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .pricing-list {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto 2rem auto; /* Zmniejszono dolny margines, by zmieścić dopisek */
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .price-category {
+    padding: 2.5rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .category-title {
+    /* Zmieniony z ciemno-szarego na Eleganckie Złoto */
+    color: var(--color-accent); 
+    margin: 0 0 1.5rem 0;
+    border-bottom: 2px solid var(--color-lavender-dark);
+    padding-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.1rem 0;
+    border-bottom: 1px dashed var(--color-lavender-dark);
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  li:last-child {
+    border-bottom: none;
+  }
+
+  .service-name {
+    font-weight: 500;
+    color: var(--color-primary-medium);
+  }
+
+  .price-value {
+    font-weight: 800;
+    color: var(--color-primary-dark);
+    font-size: 1.15rem;
+    white-space: nowrap;
+  }
+  
+  .pricing-disclaimer {
+    color: var(--color-primary-medium);
+    font-style: italic;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  @media (max-width: 768px) {
+    .pricing-list {
+      margin-bottom: 1.5rem;
+      gap: 1.5rem;
+    }
+
+    .price-category {
+      padding: 1.5rem;
+    }
+
+    .category-title {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .price-value {
+      font-size: 1.05rem;
+    }
+
+    li {
+      padding: 0.8rem 0;
+    } 
+    
+    .pricing-disclaimer {
+      margin-bottom: 2.5rem;
+    }
+  }
+</style>

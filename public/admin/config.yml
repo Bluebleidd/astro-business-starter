@@ -1,0 +1,160 @@
+site_url: https://ak-studio-nails.pages.dev
+display_name: AK Studio CMS
+local_backend: true
+
+backend:
+  name: github
+  repo: Bluebleidd/ak-studio-nails-website
+  branch: master
+  base_url: https://ak-studio-nails.pages.dev
+  auth_endpoint: /api/auth
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+locale: 'pl'
+
+collections:
+  - name: "site_management"
+    label: "Zarządzanie stroną"
+    format: "json"
+    editor:
+      preview: false
+    files:
+      
+      # ----------------------------------------
+      # STRONA GŁÓWNA
+      # ----------------------------------------
+      - name: "services_page"
+        label: "Strona główna"
+        file: "src/data/services.json"
+        fields:
+          - { label: "Główny tytuł - Część 1 (czarny)", name: "hero_title_1", widget: "string" }
+          - { label: "Główny tytuł - Część 2 (szary)", name: "hero_title_2", widget: "string" }
+          - label: "Lista atutów w sekcji głównej"
+            name: "hero_features"
+            widget: "list"
+            required: false
+            summary: "{{feature}}"
+            fields:
+              - { label: "Treść punktu", name: "feature", widget: "string" }
+          - { label: "Zdjęcie PRZED (sekcja główna)", name: "hero_image_before", widget: "image" }
+          - { label: "Zdjęcie PO (sekcja główna)", name: "hero_image_after", widget: "image" }
+          - { label: "Nagłówek sekcji usług", name: "title", widget: "string" }
+          - name: "services"
+            label: "Karty usług"
+            label_singular: "Usługa"
+            widget: "list"
+            summary: '{{title}}'
+            fields:
+              - { label: "Tytuł usługi", name: "title", widget: "string" }
+              - { label: "Opis usługi", name: "description", widget: "text" }
+              - label: "Ikona usługi"
+                name: "icon"
+                widget: "select"
+                required: false
+                options:
+                  - { label: "🛡️ Tarcza", value: "ShieldCheck" }
+                  - { label: "🩹 Plaster", value: "Bandage" }
+                  - { label: "❤️ Serce", value: "Heart" }
+                  - { label: "➕ Plus", value: "PlusSquare" }
+                  - { label: "✨ Błyskotki", value: "Sparkles" }
+                  - { label: "⭐ Gwiazdka", value: "Star" }
+                  - { label: "💧 Kropla", value: "Droplets" }
+                  - { label: "✂️ Nożyczki", value: "Scissors" }
+                  - { label: "🖐️ Ręka", value: "Hand" }
+                  - { label: "🔍 Lupa", value: "Search" }
+                  - { label: "⚡ Błyskawica", value: "Zap" }
+                  - { label: "🍃 Liść", value: "Leaf" }
+
+      # ----------------------------------------
+      # O MNIE
+      # ----------------------------------------
+      - name: "about_page"
+        label: "O mnie"
+        file: "src/data/about.json"
+        fields:
+          - { label: "Nagłówek strony", name: "title", widget: "string" }
+          - { label: "Zdjęcie profilowe", name: "profileImage", widget: "image" }
+          - { label: "Opis biograficzny", name: "description", widget: "markdown" }
+          - label: "Certyfikaty i dyplomy"
+            name: "certificates"
+            widget: "list"
+            summary: '{{name}}'
+            fields:
+              - { label: "Nazwa certyfikatu", name: "name", widget: "string" }
+              - { label: "Zdjęcie / Skan", name: "image", widget: "image" }
+              - { label: "Data uzyskania", name: "date", widget: "string", required: false }
+
+      # ----------------------------------------
+      # CENNIK
+      # ----------------------------------------
+      - name: "pricing_page"
+        label: "Cennik"
+        file: "src/data/pricing.json"
+        fields:
+          - { label: "Nagłówek strony", name: "title", widget: "string" }
+          - label: "Kategoria cennika"
+            name: "categories"
+            widget: "list"
+            summary: '{{category_name}}'
+            fields:
+              - { label: "Nazwa kategorii", name: "category_name", widget: "string" }
+              - label: "Usługa"
+                name: "services"
+                widget: "list"
+                summary: '{{service_name}} ({{price}} zł)'
+                fields:
+                  - { label: "Nazwa usługi", name: "service_name", widget: "string" }
+                  - { label: "Cena usługi", name: "price", widget: "string" }
+
+      # ----------------------------------------
+      # GALERIA
+      # ----------------------------------------
+      - name: "gallery"
+        label: "Galeria"
+        file: "src/data/gallery.json"
+        fields:
+          - { label: "Nagłówek galerii", name: "title", widget: "string" }
+          - { label: "Podtytuł", name: "subtitle", widget: "string", required: false }
+          - name: "images"
+            label: "Elementy galerii"
+            widget: "list"
+            types:
+              - label: "Pojedyncze zdjęcie"
+                name: "single"
+                widget: "object"
+                fields:
+                  - { label: "Zdjęcie", name: "image", widget: "image" }
+                  - { label: "Opis SEO (Ważne dla Google)", name: "alt", widget: "string" }
+              
+              - label: "Suwak (Przed/Po)"
+                name: "before_after"
+                widget: "object"
+                fields:
+                  - { label: "Zdjęcie PRZED", name: "image_before", widget: "image" }
+                  - { label: "Zdjęcie PO", name: "image_after", widget: "image" }
+                  - { label: "Opis SEO (Ważne dla Google)", name: "alt", widget: "string" }
+              
+              - label: "Wideo"
+                name: "video"
+                widget: "object"
+                fields:
+                  - { label: "Plik wideo", name: "video", widget: "file" }
+                  - { label: "Opis SEO (Ważne dla Google)", name: "alt", widget: "string" }
+
+      # ----------------------------------------
+      # KONTAKT
+      # ----------------------------------------
+      - name: "contact_page"
+        label: "Kontakt"
+        file: "src/data/contact.json"
+        fields:
+          - { label: "Nagłówek strony", name: "title", widget: "string" }
+          - { label: "Numer telefonu (wyświetlany, np. +48 123 456 789)", name: "phone", widget: "string" }
+          - { label: "Numer telefonu (same cyfry, np. 123456789)", name: "phoneLink", widget: "string" }
+          - { label: "Adres e-mail", name: "email", widget: "string" }
+          - { label: "Link do Facebooka", name: "facebook", widget: "string" }
+          - { label: "Link do Instagrama", name: "instagram", widget: "string" }
+          - { label: "Ulica i numer lokalu, np. ul. Kolorowa 10", name: "address", widget: "string" }
+          - { label: "Kod pocztowy i miasto, np. 00-000 Warszawa", name: "city", widget: "string" }
+          - { label: "Link do nawigacji (Google Maps URL)", name: "googleMapsLink", widget: "string" }

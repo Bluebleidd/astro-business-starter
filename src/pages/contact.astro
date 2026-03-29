@@ -1,0 +1,150 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Phone, MapPin, Mail, Facebook, Instagram } from 'lucide-astro';
+import contactData from '../data/contact.json';
+---
+
+<Layout title="[Contact Page Title] | [Your Company Name]">
+  <div class="section-container">
+    <header class="section-title">
+      <h1>{contactData.title}</h1>
+    </header>
+
+    <div class="contact-grid">
+      <div class="contact-card card-base">
+        <div class="card-title-group">
+          <Phone size={24} strokeWidth={2} class="icon" />
+          <h3>[Phone]</h3>
+        </div>
+        <p>
+          <a href={`tel:+48${contactData.phoneLink}`}>{contactData.phone}</a>
+        </p>
+      </div>
+      
+      <div class="contact-card card-base">
+        <div class="card-title-group">
+          <Mail size={24} strokeWidth={2} class="icon" />
+          <h3>[E-mail]</h3>
+        </div>
+        <p>
+          <a href={`mailto:${contactData.email}`}>{contactData.email}</a>
+        </p>
+      </div>
+
+      <div class="contact-card card-base">
+        <div class="card-title-group">
+          <Facebook size={24} strokeWidth={2} class="icon" />
+          <h3>[Facebook]</h3>
+        </div>
+        <p>
+          <a href={contactData.facebook} target="_blank">
+            [Follow our profile]
+          </a>
+        </p>
+      </div>
+
+      <div class="contact-card card-base">
+        <div class="card-title-group">
+          <Instagram size={24} strokeWidth={2} class="icon" />
+          <h3>[Instagram]</h3>
+        </div>
+        <p>
+          <a href={contactData.instagram} target="_blank">
+            [Follow our profile]
+          </a>
+        </p>
+      </div>
+
+      <div class="contact-card card-base">
+        <div class="card-title-group">
+          <MapPin size={24} strokeWidth={2} class="icon" />
+          <h3>[Address]</h3>
+        </div>
+        <p>
+          <a href={contactData.googleMapsLink} target="_blank">
+            {contactData.address}<br />
+            {contactData.city}
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div class="map-container">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d163776.46359546274!2d21.879743907727404!3d50.04068591873766!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473cfae3cc14d449%3A0xd2240d31b33eb2ed!2sRzesz%C3%B3w!5e0!3m2!1spl!2spl!4v1711201509015!5m2!1spl!2spl"
+        width="100%" 
+        height="450" 
+        style="border:0;" 
+        allowfullscreen="" 
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .contact-card {
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .card-title-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+  }
+
+  .icon {
+    color: var(--color-primary-light);
+    background: var(--color-lavender-light);
+    padding: 10px;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+
+  .contact-card h3 {
+    color: var(--color-primary-dark);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .contact-card p,
+  .contact-card a {
+    color: var(--color-primary-medium);
+    font-size: 1.05rem;
+    text-decoration: none;
+    text-align: center;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .contact-card a {
+    font-weight: 700;
+    color: var(--color-primary-light);
+  }
+
+  .map-container {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--color-lavender-dark);
+    margin-top: 2.5rem;
+    margin-bottom: 4rem;
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .map-container {
+      margin-bottom: 2.5rem; 
+    }
+  }
+</style>

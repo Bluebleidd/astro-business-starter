@@ -1,0 +1,15 @@
+{
+  "title": "[Your Name / Company Name]",
+  "description": "[A paragraph about you or your company, your mission, and your values.]",
+  "profileImage": "/placeholder.svg",
+  "certificates": [
+    {
+      "image": "/placeholder.svg",
+      "description": "[Certificate 1 Name]"
+    },
+    {
+      "image": "/placeholder.svg",
+      "description": "[Certificate 2 Name]"
+    }
+  ]
+}

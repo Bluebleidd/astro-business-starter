@@ -1,0 +1,85 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import ShowcaseSlider from '../components/ShowcaseSlider.astro';
+import ServicesSection from '../components/ServicesSection.astro';
+
+import servicesData from '../data/services.json';
+---
+
+<Layout title="[Your Company Name] | [Main SEO tagline]" 
+  description="[Homepage description for SEO.]">
+  <div class="section-container hero-page-start">
+    <section class="hero-wrapper">
+      <div class="hero-content">
+        <HeroSection 
+          title1={servicesData.hero_title_1}
+          title2={servicesData.hero_title_2}
+          features={servicesData.hero_features}
+        />
+      </div>
+      <div class="hero-visual">
+        <div class="slider-card">
+          <ShowcaseSlider 
+            beforeImage={servicesData.hero_image_before} 
+            afterImage={servicesData.hero_image_after} 
+            altText="[Before and after effect of the service]"
+          />
+        </div>
+      </div>
+    </section>
+  </div>
+  
+  <div class="services-wrapper">
+    <ServicesSection />
+  </div>
+</Layout>
+
+<style>
+  .hero-page-start {
+    margin-top: 1rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .hero-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+    padding-bottom: 1rem;
+  }
+
+  .slider-card {
+    border-radius: var(--radius-lg, 24px);
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    transition: all 0.4s ease;
+  }
+
+  .services-wrapper {
+    background-color: var(--color-white);
+    padding-bottom: 4rem;
+  }
+
+  @media (max-width: 1024px) {
+    .hero-wrapper {
+      grid-template-columns: 1fr;
+      gap: 2rem; 
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-page-start {
+      margin-top: 0rem !important;
+    }
+
+    .hero-wrapper {
+       gap: 1.5rem; 
+    }
+
+    .services-wrapper {
+      padding-bottom: 2.5rem;
+    }
+  }
+</style>

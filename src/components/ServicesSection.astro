@@ -1,0 +1,94 @@
+---
+import { ShieldCheck, Bandage, Heart, PlusSquare, Sparkles, Star, Droplets, Scissors, Hand, Search, Zap, Leaf, Sun, Target } from 'lucide-astro';
+import servicesData from '../data/services.json';
+
+const icons = { ShieldCheck, Bandage, Heart, PlusSquare, Sparkles, Star, Droplets, Scissors, Hand, Search, Zap, Leaf, Sun, Target };
+const { services } = servicesData;
+---
+
+<section class="services-section">
+  <div class="section-container">
+    <div class="section-title">
+      <h2>{servicesData.title}</h2>
+    </div>
+    <div class="services-grid">
+      {services.map(service => {
+        const Icon = service.icon && Object.prototype.hasOwnProperty.call(icons, service.icon)
+          ? icons[service.icon as keyof typeof icons] : null;
+        return (
+          <div class="service-card card-base">
+            <div class="card-title-group">
+              {Icon && <Icon size={24} strokeWidth={2} class="icon" />}
+              <h3>{service.title}</h3>
+            </div>
+            <p>{service.description}</p>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .services-section {
+    padding: 0;
+    width: 100%;
+  }
+  
+  .service-card { 
+    padding: 2.5rem 2rem;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    box-sizing: border-box;
+    text-align: center; 
+  }
+
+  .card-title-group { 
+    display: grid; 
+    grid-template-columns: 44px 1fr 44px; 
+    align-items: center; 
+    gap: 1rem; 
+    margin-bottom: 1.5rem; 
+    width: 100%;
+  }
+
+  .card-title-group::after {
+    content: "";
+    display: block;
+  }
+
+  .icon { 
+    color: var(--color-primary-light);
+    background: var(--color-lavender-light);
+    padding: 10px;
+    border-radius: 12px;
+    margin-bottom: 0;
+  }
+
+  .service-card h3 {
+    color: var(--color-primary-dark);
+    font-size: 1.25rem; 
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .service-card p {
+    color: var(--color-primary-medium);
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .services-section { 
+      padding: 0; 
+    }
+    
+    .service-card {
+      padding-bottom: 2.5rem; 
+    }
+  }
+</style>

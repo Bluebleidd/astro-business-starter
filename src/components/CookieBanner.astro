@@ -1,0 +1,99 @@
+---
+// src/components/CookieBanner.astro
+---
+
+<div id="cookie-banner" class="cookie-banner hidden">
+  <div class="cookie-content">
+    <p>
+      [This website uses cookies to ensure you get the best experience. You can specify the conditions for storing cookies in your browser.]
+      <a href="/polityka-prywatnosci">[Learn more]</a>
+    </p>
+  </div>
+  <button id="accept-cookies" class="cookie-btn">[Accept]</button>
+</div>
+
+<style>
+  .cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-primary-dark);
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 9999;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+  }
+  
+  .cookie-banner.hidden {
+    display: none !important;
+  }
+
+  .cookie-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--color-lavender-light);
+  }
+
+  .cookie-content a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    margin-left: 5px;
+  }
+
+  .cookie-content a:hover {
+    color: var(--color-accent-darker);
+  }
+
+  .cookie-btn {
+    background-color: var(--color-accent);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+    margin-left: 2rem;
+  }
+
+  .cookie-btn:hover {
+    background-color: var(--color-accent-darker);
+  }
+
+  @media (max-width: 768px) {
+    .cookie-banner {
+      flex-direction: column;
+      text-align: center;
+      padding: 1.5rem;
+      gap: 1rem;
+    }
+    .cookie-btn {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const banner = document.getElementById('cookie-banner');
+    const btn = document.getElementById('accept-cookies');
+
+    if (!localStorage.getItem('cookiesAccepted') && banner) {
+      banner.classList.remove('hidden');
+    }
+
+    if (btn && banner) {
+      btn.addEventListener('click', () => {
+        localStorage.setItem('cookiesAccepted', 'true');
+        banner.classList.add('hidden');
+      });
+    }
+  });
+</script>

@@ -1,0 +1,444 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ShowcaseSlider from '../components/ShowcaseSlider.astro';
+import galleryData from '../data/gallery.json';
+
+const galleryImages = galleryData.images || [];
+const title = galleryData.title || "Galeria";
+const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych terapii podologicznych.";
+---
+
+<Layout 
+  title="[Gallery Page Title] | [Your Company Name]"
+  description="[Gallery page description for SEO.]"
+>
+  <div class="section-container">
+    <header class="section-title">
+      <h1>{title}</h1>
+      {subtitle && <p class="gallery-subtitle-custom">{subtitle}</p>}
+    </header>
+
+    <section class="gallery-container">
+      <div class="gallery-grid">
+        {galleryImages.map((item: any) => (
+          <div class="gallery-item-container">
+            <div class="gallery-card">
+              {item.type === 'single' && (
+                <div class="gallery-item is-single">
+                  <img src={item.image} alt={item.alt} loading="lazy" />
+                  <div class="image-overlay">
+                    <span>[Zoom]</span>
+                  </div>
+                </div>
+              )}
+
+              {item.type === 'before_after' && (
+                <div class="gallery-slider-wrapper">
+                  <ShowcaseSlider 
+                    beforeImage={item.image_before} 
+                    afterImage={item.image_after} 
+                    altText={item.alt} 
+                  />
+                  <div class="expand-hint">
+                    <span>[Zoom]</span>
+                  </div>
+                </div>
+              )}
+              
+              {item.type === 'video' && (
+                <div class="gallery-item is-video" data-video-src={item.video}>
+                  <video 
+                    preload="metadata"
+                    muted 
+                    loop 
+                    playsinline
+                    controlslist="nodownload"
+                    oncontextmenu="return false;"
+                  >
+                    <source src={`${item.video}#t=0.001`} type="video/mp4" />
+                  </video>
+                  <div class="image-overlay">
+                    <span>[Play]</span>
+                  </div>
+                </div>
+              )}
+              
+              <div class="gallery-content">
+                <p class="gallery-item-description">
+                  {item.alt || "[Default image description]"}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+
+  <div id="lightbox" class="lightbox">
+    <span class="close-lightbox">&times;</span>
+    <img id="lightbox-img" src="" alt="[Enlarged image]" />
+    <video 
+      id="lightbox-video" 
+      src="" 
+      controls 
+      controlslist="nodownload" 
+      oncontextmenu="return false;"
+    ></video>
+    <div id="lightbox-slider-wrapper"></div>
+  </div>
+</Layout>
+
+<style>
+  .gallery-subtitle-custom {
+    color: var(--color-primary-medium);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 1rem auto 0 auto;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .gallery-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem 4rem 1rem;
+  }
+  
+  .gallery-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+    gap: 2.5rem; 
+  }
+
+  .gallery-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-white);
+    border-radius: var(--radius-lg, 24px);
+    overflow: hidden;
+    height: 100%;
+    border: 1px solid rgba(212, 175, 55, 0.2); 
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.08);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .gallery-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 25px 50px -20px rgba(0, 0, 0, 0.2);
+    border-color: rgba(212, 175, 55, 0.6); 
+  }
+
+  .gallery-item, 
+  .gallery-slider-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3; 
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .gallery-item img, 
+  .gallery-item video,
+  .gallery-slider-wrapper :global(img) { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    display: block;
+    transition: transform 0.8s ease; 
+  }
+
+  .gallery-slider-wrapper :global(.ba-slider-container) {
+    aspect-ratio: auto !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .gallery-card:hover .gallery-item img, 
+  .gallery-card:hover .gallery-item video,
+  .gallery-card:hover .gallery-slider-wrapper :global(img) { 
+    transform: scale(1.1); 
+  }
+
+  .gallery-content {
+    padding: 1.5rem 1.2rem;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, var(--color-white) 0%, var(--color-lavender-light) 100%);
+  }
+
+  .gallery-item-description {
+    text-align: center;
+    color: var(--color-primary-dark);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+    font-weight: 500;
+    font-style: italic;
+    opacity: 0.9;
+  }
+
+  .image-overlay {
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    opacity: 0; 
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(3px);
+  }
+
+  .gallery-card:hover .image-overlay { 
+    opacity: 1; 
+  }
+
+  .image-overlay span {
+    background-color: rgba(0, 0, 0, 0.85);
+    color: var(--color-accent);
+    font-weight: 600; 
+    font-size: 0.9rem;
+    border: 1px solid var(--color-accent);
+    padding: 10px 24px; 
+    border-radius: 40px;
+    text-transform: uppercase; 
+    letter-spacing: 0.1em;
+  }
+
+  .expand-hint {
+    position: absolute; 
+    bottom: 15px; 
+    right: 15px;
+    background: rgba(0, 0, 0, 0.85);
+    color: var(--color-accent);
+    padding: 7px 18px; 
+    border-radius: 40px;
+    font-size: 0.8rem; 
+    font-weight: 600;
+    opacity: 0; 
+    transition: all 0.3s ease;
+    z-index: 20; 
+    border: 1px solid var(--color-accent);
+  }
+
+  .gallery-card:hover .expand-hint { 
+    opacity: 1; 
+  }
+
+  .lightbox {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background-color: rgba(10, 10, 10, 0.95); 
+    z-index: 9999;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    opacity: 0; 
+    pointer-events: none; 
+    transition: opacity 0.3s ease;
+  }
+
+  .lightbox.active { 
+    opacity: 1; 
+    pointer-events: auto; 
+  }
+
+  .lightbox img#lightbox-img, 
+  .lightbox video#lightbox-video {
+    max-width: 90%; 
+    max-height: 85vh; 
+    border-radius: var(--radius-lg, 24px); 
+    overflow: hidden; 
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    object-fit: contain; 
+    display: none;
+  }
+
+  #lightbox-slider-wrapper {
+    width: 90%;
+    max-width: 1000px;
+    display: none;
+  }
+
+  #lightbox-slider-wrapper :global(.ba-slider-container) {
+    border-radius: var(--radius-lg, 24px) !important;
+    overflow: hidden;
+  }
+
+  .close-lightbox { 
+    position: absolute; 
+    top: 20px; 
+    right: 30px; 
+    color: var(--color-accent);
+    font-size: 3.5rem; 
+    cursor: pointer; 
+    z-index: 10000;
+    transition: color 0.2s ease;
+  }
+  
+  .close-lightbox:hover {
+    color: var(--color-white);
+  }
+
+  @media (max-width: 768px) {
+    .gallery-grid { 
+      grid-template-columns: 1fr; 
+      gap: 1.5rem; 
+    }
+
+    .gallery-container { 
+      padding-bottom: 2.5rem; 
+    }
+
+    .gallery-card { 
+      height: auto; 
+      transform: none !important; 
+    }
+
+    .gallery-item, 
+    .gallery-slider-wrapper { 
+      aspect-ratio: 16/10; 
+    }
+
+    .gallery-content { 
+      padding: 1.2rem 1rem; 
+    }
+
+    .image-overlay { 
+      display: none; 
+    }
+
+    .expand-hint { 
+      opacity: 1; 
+      font-size: 0.75rem; 
+    }
+  }
+
+  #lightbox .expand-hint {
+    display: none !important;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const galleryCards = document.querySelectorAll('.gallery-card');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+    const lightboxVideo = document.getElementById('lightbox-video') as HTMLVideoElement;
+    const lightboxSliderWrapper = document.getElementById('lightbox-slider-wrapper');
+    const closeBtn = document.querySelector('.close-lightbox');
+
+    let currentSliderNode: HTMLElement | null = null;
+    let currentSliderPlaceholder: HTMLElement | null = null;
+    
+    function hideAllLightboxMedia() {
+      if (lightboxImg) lightboxImg.style.display = 'none';
+      if (lightboxVideo) {
+        lightboxVideo.style.display = 'none';
+        lightboxVideo.pause();
+        lightboxVideo.src = "";
+      }
+      if (lightboxSliderWrapper) lightboxSliderWrapper.style.display = 'none';
+    }
+
+    galleryCards.forEach(card => {
+      const singleItem = card.querySelector('.is-single');
+      const videoItem = card.querySelector('.is-video');
+      const sliderWrapper = card.querySelector('.gallery-slider-wrapper');
+      const expandHint = card.querySelector('.expand-hint');
+
+      if (singleItem) {
+        singleItem.addEventListener('click', () => {
+          const img = singleItem.querySelector('img');
+          if (img && lightbox && lightboxImg) {
+            hideAllLightboxMedia();
+            lightboxImg.src = img.src;
+            lightboxImg.style.display = 'block';
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+          }
+        });
+      }
+      
+      if (videoItem) {
+        videoItem.addEventListener('click', () => {
+          const videoSrc = (videoItem as HTMLElement).dataset.videoSrc;
+          if (videoSrc && lightbox && lightboxVideo) {
+            hideAllLightboxMedia();
+            lightboxVideo.src = videoSrc;
+            lightboxVideo.style.display = 'block';
+            lightboxVideo.play();
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+          }
+        });
+      }
+
+      if (sliderWrapper) {
+        const triggerSlider = () => {
+          if (lightbox && lightboxSliderWrapper) {
+            hideAllLightboxMedia();
+            currentSliderNode = sliderWrapper as HTMLElement;
+            currentSliderPlaceholder = document.createElement('div');
+            currentSliderPlaceholder.style.display = 'none';
+            
+            sliderWrapper.parentNode?.insertBefore(currentSliderPlaceholder, sliderWrapper);
+            lightboxSliderWrapper.appendChild(sliderWrapper);
+            lightboxSliderWrapper.style.display = 'block';
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+          }
+        };
+
+        if (expandHint) {
+          expandHint.addEventListener('click', (e) => { 
+            e.stopPropagation(); 
+            triggerSlider(); 
+          });
+        }
+
+        sliderWrapper.addEventListener('click', (e) => {
+          if (!(e.target as HTMLElement).classList.contains('ba-range')) {
+            triggerSlider();
+          }
+        });
+      }
+    });
+
+    function closeLightbox() {
+      if (lightbox?.classList.contains('active')) {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        
+        if (currentSliderNode && currentSliderPlaceholder) {
+          currentSliderPlaceholder.parentNode?.insertBefore(currentSliderNode, currentSliderPlaceholder);
+          currentSliderPlaceholder.remove();
+          currentSliderNode = null;
+          currentSliderPlaceholder = null;
+          setTimeout(() => window.dispatchEvent(new Event('resize')), 10);
+        }
+        hideAllLightboxMedia();
+      }
+    }
+
+    closeBtn?.addEventListener('click', closeLightbox);
+    lightbox?.addEventListener('click', (e) => { 
+      if (e.target === lightbox) closeLightbox(); 
+    });
+    document.addEventListener('keydown', (e) => { 
+      if (e.key === 'Escape') closeLightbox(); 
+    });
+  });
+</script>

@@ -1,0 +1,120 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="[Privacy Policy] | [Your Company Name]">
+  <div class="section-container legal-page-container">
+    <header class="page-header">
+      <h1>[Privacy Policy & Cookies]</h1>
+      <p class="last-updated">[Last updated: March 29, 2026]</p>
+    </header>
+
+    <div class="legal-content">
+      <section>
+        <h2>[1. General Information]</h2>
+        <p>
+         [This privacy policy sets out the rules for the processing and protection of personal data provided by Users in connection with their use of the website <strong>[Your Company Name]</strong>. We respect your privacy and care for security by using SSL certificates and regularly updating the website software.]
+        </p>
+      </section>
+
+      <section>
+        <h2>[2. Personal Data Administrator]</h2>
+        <p>
+          [The administrator of your personal data is:]<br />
+          <strong>[Your Company Name]</strong><br />
+          [Your Company Address, City]<br />
+          [NIP: Your NIP | REGON: Your REGON]
+        </p>
+        <p>
+          [Contact with the Administrator regarding personal data protection:]<br />
+          <strong>[E-mail:]</strong> [your.email@example.com]<br />
+          <strong>[Phone:]</strong> [123-456-789]
+        </p>
+      </section>
+      
+      <section>
+        <h2>[3. Data Sharing]</h2>
+        <p>
+          [Your personal data is not sold or shared with third parties for marketing purposes. The website is maintained on external servers (e.g., Cloudflare, Inc., and GitHub, Inc.) on the basis of data processing agreements, solely to ensure the stable and secure functioning of the service. Data is processed within the European Economic Area (EEA).]
+        </p>
+      </section>
+
+      <section>
+        <h2>[4. User Rights (According to GDPR)]</h2>
+        <p>[In connection with the processing of your personal data, you have the following rights:]</p>
+        <ul>
+          <li><strong>[Right of access to data:]</strong> [to obtain information about what data we process.]</li>
+          <li><strong>[Right to rectification:]</strong> [to correct incorrect or outdated data.]</li>
+          <li><strong>[Right to erasure ('right to be forgotten'):]</strong> [provided that there are no other legal grounds for their processing.]</li>
+          <li><strong>[Right to restrict processing]</strong> and <strong>[right to data portability]</strong>.</li>
+          <li><strong>[Right to object:]</strong> [to the processing of data on the basis of a legitimate interest.]</li>
+          <li><strong>[Right to lodge a complaint:]</strong> [to the President of the Personal Data Protection Office (UODO), if you believe that the processing violates the provisions of the GDPR.]</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>[5. Data Retention Period]</h2>
+        <p>
+          [Personal data will be stored for the period necessary to achieve the purposes for which they were collected. In the case of data processed to handle e-mail/telephone inquiries - for the time necessary to provide a response and possibly provide the service.]
+        </p>
+      </section>
+
+      <section>
+        <h2>[6. Cookies]</h2>
+        <p>
+          [Our website is static and informational. We use cookies only to the extent necessary for its proper and secure functioning (so-called technical cookies, e.g., provided by the Cloudflare network for security reasons).]
+        </p>
+        <p>
+          <strong>[We do not use]</strong> [tracking cookies, remarketing cookies, or advanced analytical systems that track individual users. You can manage cookies from your web browser settings.]
+        </p>
+      </section>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .legal-page-container {
+    padding-bottom: 4rem;
+  }
+
+  .last-updated {
+    font-style: italic;
+    opacity: 0.8;
+    margin-top: 0.5rem;
+  }
+  
+  .legal-content {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .legal-content h2 { 
+    color: var(--color-primary-dark); 
+    font-size: 1.5rem; 
+    margin: 2.5rem 0 1rem 0;
+    border-left: 4px solid var(--color-accent);
+    padding-left: 1rem;
+  }
+
+  .legal-content p, 
+  .legal-content li { 
+    line-height: 1.8; 
+    margin-bottom: 1rem; 
+    color: var(--color-primary-medium);
+  }
+
+  .legal-content ul {
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .legal-page-container {
+      padding-bottom: 2.5rem;
+    }
+
+    .legal-content h2 {
+      font-size: 1.3rem;
+    }
+  }
+</style>

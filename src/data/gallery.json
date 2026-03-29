@@ -1,0 +1,27 @@
+{
+  "title": "[Gallery Title]",
+  "subtitle": "[A short description of the gallery and the work displayed.]",
+  "images": [
+    {
+      "type": "single",
+      "image": "/placeholder.svg",
+      "alt": "[Image description 1]"
+    },
+    {
+      "type": "single",
+      "image": "/placeholder.svg",
+      "alt": "[Image description 2]"
+    },
+    {
+      "type": "single",
+      "image": "/placeholder.svg",
+      "alt": "[Image description 3]"
+    },
+    {
+      "type": "before_after",
+      "image_before": "/placeholder.svg",
+      "image_after": "/placeholder.svg",
+      "alt": "[BA Image description]"
+    }
+  ]
+}
