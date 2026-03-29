@@ -1,6 +1,6 @@
 # Astro Service-Based Business Template & CMS
 
-** [Live Demo: astro-business-starter.pages.dev](https://astro-business-starter.pages.dev/)**
+**[Live Demo: astro-business-starter.pages.dev](https://astro-business-starter.pages.dev/)**
 
 A high-performance website template designed specifically for local service businesses. 
 
