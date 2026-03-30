@@ -19,8 +19,8 @@
     },
     {
       "type": "before_after",
-      "image_before": "/placeholder.svg",
-      "image_after": "/placeholder.svg",
+      "image_before": "/placeholder_before.svg",
+      "image_after": "/placeholder_after.svg",
       "alt": "[BA Image description]"
     }
   ]
