@@ -2,19 +2,32 @@
 import Layout from '../layouts/Layout.astro';
 import aboutData from '../data/about.json';
 import { marked } from 'marked';
+import { Image } from 'astro:assets';
 
 const parsedDescription = marked.parse(aboutData.description);
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/uploads/*.{jpeg,jpg,png,gif,webp,AVIF}');
+
+const profileImageObj = images[aboutData.profileImage] ? await images[aboutData.profileImage]() : null;
 ---
 
-<Layout 
-  title="[About Page Title] | [Your Company Name]"
-  description="[About page description for SEO.]"
->
+<Layout
+  title="[About Us] | [Your Company Name]" 
+  description="[Brief description of your company for SEO.]">
   <div class="section-container">
     <section class="about-hero">
       <div class="about-grid">
         <div class="profile-image">
-          <img src={aboutData.profileImage} alt={aboutData.title} />
+          {profileImageObj ? (
+            <Image 
+              src={profileImageObj.default} 
+              alt={aboutData.title} 
+              width={450} 
+              height={550} 
+              loading="eager" 
+            />
+          ) : (
+            <img src={aboutData.profileImage} alt={aboutData.title} />
+          )}
         </div>
         <div class="about-text">
           <h1>{aboutData.title}</h1>
@@ -28,23 +41,33 @@ const parsedDescription = marked.parse(aboutData.description);
     <div class="section-container">
       <section class="certificates">
         <header class="section-title">
-          <h2>[My Certificates]</h2>
+          <h2>Moje Certyfikaty</h2>
         </header>
         
         <div class="certs-grid">
-          {aboutData.certificates.map((cert: any) => (
-            <div class="cert-card card-base">
-              <div class="cert-image is-clickable">
-                <img src={cert.image} alt={cert.description} loading="lazy" />
-                <div class="image-overlay">
-                  <span>[Zoom]</span>
+          {aboutData.certificates.map(async (cert: any) => {
+            const imageObj = images[cert.image] ? await images[cert.image]() : null;
+            const fullSrc = imageObj ? imageObj.default.src : cert.image;
+
+            return (
+              <div class="cert-card card-base">
+                <div class="cert-image is-clickable" data-full={fullSrc}>
+                  {imageObj ? (
+                    <Image src={imageObj.default} alt={cert.name} width={350} height={250} />
+                  ) : (
+                    <img src={cert.image} alt={cert.name} loading="lazy" />
+                  )}
+                  <div class="image-overlay">
+                    <span>Powiększ</span>
+                  </div>
+                </div>
+                <div class="cert-info">
+                  <h3>{cert.name}</h3>
+                  {cert.date && <p>{cert.date}</p>}
                 </div>
               </div>
-              <div class="cert-info">
-                <h4>{cert.description}</h4>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
     </div>
@@ -52,23 +75,23 @@ const parsedDescription = marked.parse(aboutData.description);
 
   <div id="lightbox" class="lightbox">
     <span class="close-lightbox">×</span>
-    <img id="lightbox-img" src="" alt="[Enlarged certificate]" />
+    <img id="lightbox-img" src="" alt="[Lightbox Image]" width="1200" height="900" />
   </div>
 </Layout>
 
 <style>
-  .about-hero { 
+  .about-hero {
     padding-top: 1rem !important;
     padding-bottom: 2rem !important;
   }
-  
-  .about-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1.5fr; 
-    gap: 2.5rem; 
-    align-items: center; 
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 2.5rem;
+    align-items: center;
   }
-  
+
   .profile-image {
     position: relative;
     padding-right: 15px;
@@ -76,168 +99,182 @@ const parsedDescription = marked.parse(aboutData.description);
   }
 
   .profile-image img {
-    width: 100%;
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 550px;
+    object-fit: contain;
+    aspect-ratio: auto !important;
     border-radius: var(--radius-lg);
     box-shadow: 15px 15px 0 var(--color-accent);
-    object-fit: cover;
+    background-color: var(--color-lavender-light);
+    padding: 20px;
+    box-sizing: border-box;
     transition: all 0.3s ease;
   }
 
-  .about-text h1 { 
-    color: var(--color-primary-dark); 
-    font-size: clamp(2rem, 4vw, 3rem); 
-    margin-bottom: 1rem; 
-    line-height: 1.1; 
+  .about-text h1 {
+    color: var(--color-primary-dark);
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 1rem;
+    line-height: 1.1;
   }
 
-  /* WAŻNE: Dodany styl dla elementów wygenerowanych przez markdown */
-  .description { 
-    font-size: 1.1rem; 
-    line-height: 1.8; 
-    margin-bottom: 1.5rem; 
-    color: var(--color-primary-medium); 
+  .description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    color: var(--color-primary-medium);
   }
+
   .description p {
     margin-bottom: 1rem;
   }
+
   .description strong {
     color: var(--color-primary-dark);
     font-weight: 700;
   }
 
-  .certificates-wrapper { 
+  .certificates-wrapper {
     background-color: var(--color-white);
     display: flex;
     padding-bottom: 4rem;
-    width: 100%; 
-  }
-
-  .certificates { 
     width: 100%;
   }
-  
-  .certs-grid { 
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 2rem; 
+
+  .certificates {
+    width: 100%;
+  }
+
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
     width: 100%;
     align-items: stretch;
   }
 
-  .cert-card { 
-    overflow: hidden; 
+  .cert-card {
+    overflow: hidden;
     border: 1px solid var(--color-lavender-dark);
-    border-top: none !important; 
+    border-top: none !important;
     display: flex;
     flex-direction: column;
   }
-  
-  .cert-image { 
-    height: 220px; 
-    overflow: hidden; 
-    background: var(--color-lavender-light); 
-    padding: 1rem; 
+
+  .cert-image {
+    height: 220px;
+    overflow: hidden;
+    background: var(--color-lavender-light);
+    padding: 1rem;
     position: relative;
-    cursor: pointer; 
-    border-bottom: 1px solid var(--color-lavender-dark); 
+    cursor: pointer;
+    border-bottom: 1px solid var(--color-lavender-dark);
   }
 
-  .cert-image img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: contain; 
-    transition: transform 0.5s ease; 
+  .cert-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.5s ease;
   }
 
-  .cert-card:hover .cert-image img { 
-    transform: scale(1.08); 
+  .cert-card:hover .cert-image img {
+    transform: scale(1.08);
   }
 
   .image-overlay {
-    position: absolute; 
-    inset: 0; 
+    position: absolute;
+    inset: 0;
     background: rgba(0, 0, 0, 0.4);
-    display: flex; 
-    justify-content: center; 
+    display: flex;
+    justify-content: center;
     align-items: center;
-    opacity: 0; 
-    transition: opacity 0.3s ease; 
+    opacity: 0;
+    transition: opacity 0.3s ease;
     backdrop-filter: blur(3px);
   }
 
-  .cert-card:hover .image-overlay { 
-    opacity: 1; 
+  .cert-card:hover .image-overlay {
+    opacity: 1;
   }
 
   .image-overlay span {
     background-color: rgba(0, 0, 0, 0.85);
     color: var(--color-accent);
-    font-weight: 600; 
+    font-weight: 600;
     font-size: 0.9rem;
     border: 1px solid var(--color-accent);
-    padding: 10px 24px; 
+    padding: 10px 24px;
     border-radius: 40px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
   }
-  
-  .cert-info { 
-    padding: 1.5rem 1rem; 
-    text-align: center; 
-    flex-grow: 1; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
+
+  .cert-info {
+    padding: 1.5rem 1rem;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
-  .cert-info h4 { 
-    margin: 0; 
-    color: var(--color-primary-dark); 
-    font-size: 1.15rem; 
+  .cert-info h3 {
+    margin: 0;
+    color: var(--color-primary-dark);
+    font-size: 1.15rem;
+    font-weight: 700;
   }
 
-  .cert-info p { 
-    margin-top: 0.5rem; 
+  .cert-info p {
+    margin-top: 0.5rem;
     color: var(--color-primary-medium);
-    font-size: 0.95rem; 
-    font-weight: 600; 
+    font-size: 0.95rem;
+    font-weight: 600;
   }
 
-  .lightbox { 
-    position: fixed; 
-    inset: 0; 
+  .lightbox {
+    position: fixed;
+    inset: 0;
     background: rgba(10, 10, 10, 0.95);
-    z-index: 9999; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    opacity: 0; 
-    pointer-events: none; 
-    transition: opacity 0.3s ease; 
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
   }
 
-  .lightbox.active { 
-    opacity: 1; 
+  .lightbox.active {
+    opacity: 1;
     pointer-events: auto;
   }
 
-  .lightbox img { 
-    max-width: 90%; 
-    max-height: 85vh; 
-    border-radius: var(--radius-lg, 24px); 
-    background: var(--color-white); 
-    padding: 10px; 
+  .lightbox img {
+    max-width: 95vw;
+    max-height: 92vh;
+    width: auto;
+    height: auto;
+    border-radius: var(--radius-lg, 24px);
+    background: var(--color-white);
+    padding: 5px;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    object-fit: contain;
+    aspect-ratio: 4 / 3;
   }
 
-  .close-lightbox { 
-    position: absolute; 
-    top: 20px; 
-    right: 30px; 
+  .close-lightbox {
+    position: absolute;
+    top: 20px;
+    right: 30px;
     color: var(--color-accent);
-    font-size: 4rem; 
+    font-size: 4rem;
     line-height: 1;
-    cursor: pointer; 
+    cursor: pointer;
     transition: color 0.2s ease;
   }
 
@@ -246,53 +283,41 @@ const parsedDescription = marked.parse(aboutData.description);
   }
 
   @media (max-width: 1024px) {
-    .about-hero { 
-      padding-top: 3rem !important; 
+    .about-grid {
+      grid-template-columns: 1fr;
+      text-align: center;
     }
-
-    .about-grid { 
-      grid-template-columns: 1fr; 
-      gap: 2rem; 
-      text-align: center; 
+    .profile-image {
+      max-width: 320px;
+      margin: 0 auto;
     }
-
-    .profile-image { 
-      max-width: 320px; 
-      margin: 0 auto; 
-    } 
-
-    .certs-grid { 
-      grid-template-columns: repeat(2, 1fr); 
-    } 
+    .certs-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   @media (max-width: 768px) {
-    .about-hero { 
+    .about-hero {
       padding-top: 2rem !important;
       padding-bottom: 1rem;
     }
-
-    .about-grid { 
-      gap: 1rem; 
+    .about-grid {
+      gap: 1rem;
     }
-
-    .certificates-wrapper { 
+    .certificates-wrapper {
       padding-bottom: 2.5rem;
-    } 
-    
-    .profile-image { 
-      max-width: 200px; 
-      padding-right: 8px; 
-      padding-bottom: 8px; 
     }
-
-    .profile-image img { 
-      box-shadow: 8px 8px 0 var(--color-accent); 
+    .profile-image {
+      max-width: 200px;
+      padding-right: 8px;
+      padding-bottom: 8px;
     }
-    
-    .certs-grid { 
-      grid-template-columns: 1fr; 
-    } 
+    .profile-image img {
+      box-shadow: 8px 8px 0 var(--color-accent);
+    }
+    .certs-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 
@@ -304,9 +329,9 @@ const parsedDescription = marked.parse(aboutData.description);
 
   certItems.forEach(item => {
     item.addEventListener('click', () => {
-      const img = item.querySelector('img');
-      if (img && lightbox && lightboxImg) {
-        lightboxImg.src = img.src;
+      const fullSrc = (item as HTMLElement).dataset.full;
+      if (fullSrc && lightbox && lightboxImg) {
+        lightboxImg.src = fullSrc;
         lightbox.classList.add('active');
         document.body.style.overflow = 'hidden';
       }
@@ -319,7 +344,6 @@ const parsedDescription = marked.parse(aboutData.description);
   };
 
   closeBtn?.addEventListener('click', close);
-  
   lightbox?.addEventListener('click', (e) => { 
     if (e.target === lightbox) close(); 
   });

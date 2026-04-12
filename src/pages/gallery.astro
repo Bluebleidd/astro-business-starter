@@ -6,15 +6,15 @@ import { Image } from 'astro:assets';
 import { ZoomIn, SquarePlay } from 'lucide-astro';
 
 const galleryImages = galleryData.images || [];
-const title = galleryData.title || "Galeria Prac";
-const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych terapii podologicznych.";
+const title = galleryData.title || "[Gallery Title]";
+const subtitle = galleryData.subtitle || "[Gallery Subtitle]";
 
 const allMedia = import.meta.glob<{ default: any }>('/src/assets/uploads/*.{jpeg,jpg,png,svg,gif,webp,AVIF,mp4,MP4}');
 ---
 
 <Layout 
-  title="Galeria Prac i Efekty Zabiegów | AK Studio Nails Rzeszów"
-  description="Zobacz efekty moich terapii podologicznych. Autentyczne zdjęcia 'przed i po' moich pacjentów."
+  title="[Gallery] | [Your Company Name]" 
+  description="[Brief description of the gallery for SEO.]"
 >
   <div class="section-container">
     <header class="section-title">
@@ -50,7 +50,7 @@ const allMedia = import.meta.glob<{ default: any }>('/src/assets/uploads/*.{jpeg
                       afterImage={imgAfter.default} 
                       altText={item.alt} 
                     />
-                    <div class="expand-hint"><span>Powiększ</span></div>
+                    <div class="expand-hint"><span>Zoom</span></div>
                   </div>
                 )}
                 
@@ -59,7 +59,7 @@ const allMedia = import.meta.glob<{ default: any }>('/src/assets/uploads/*.{jpeg
                     <video preload="metadata" muted loop playsinline>
                       <source src={fullSrc + "#t=0.001"} type="video/mp4" />
                     </video>
-                    <div class="image-overlay"><span>Odtwórz</span></div>
+                    <div class="image-overlay"><span>Play</span></div>
                   </div>
                 )}
                 
@@ -85,7 +85,7 @@ const allMedia = import.meta.glob<{ default: any }>('/src/assets/uploads/*.{jpeg
 
   <div id="lightbox" class="lightbox">
     <span class="close-lightbox">&times;</span>
-    <img id="lightbox-img" src="" alt="Powiększone zdjęcie" />
+    <img id="lightbox-img" src="" alt="[Zoomed Image]" />
     <video 
       id="lightbox-video" 
       src="" 

@@ -3,12 +3,17 @@ import Layout from '../layouts/Layout.astro';
 import HeroSection from '../components/HeroSection.astro';
 import ShowcaseSlider from '../components/ShowcaseSlider.astro';
 import ServicesSection from '../components/ServicesSection.astro';
-
 import servicesData from '../data/services.json';
+
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/uploads/*.{jpeg,jpg,png,gif,webp,AVIF}');
+
+const heroBefore = images[servicesData.hero_image_before];
+const heroAfter = images[servicesData.hero_image_after];
 ---
 
-<Layout title="[Your Company Name] | [Main SEO tagline]" 
-  description="[Homepage description for SEO.]">
+<Layout 
+  title="[Home] | [Your Company Name]" 
+  description="[Brief description of your company for SEO.]">
   <div class="section-container hero-page-start">
     <section class="hero-wrapper">
       <div class="hero-content">
@@ -20,11 +25,15 @@ import servicesData from '../data/services.json';
       </div>
       <div class="hero-visual">
         <div class="slider-card">
-          <ShowcaseSlider 
-            beforeImage={servicesData.hero_image_before} 
-            afterImage={servicesData.hero_image_after} 
-            altText="[Before and after effect of the service]"
-          />
+          {!!heroBefore && !!heroAfter ? (
+            <ShowcaseSlider 
+              beforeImage={heroBefore()} 
+              afterImage={heroAfter()} 
+              altText="Efekt specjalistycznej terapii stóp"
+            />
+          ) : (
+            <p style="text-align:center; color: red;">Error loading images: check paths in services.json</p>
+          )}
         </div>
       </div>
     </section>
@@ -54,6 +63,7 @@ import servicesData from '../data/services.json';
     overflow: hidden;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
     transition: all 0.4s ease;
+    background: var(--color-lavender-light);
   }
 
   .services-wrapper {
