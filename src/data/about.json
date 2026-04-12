@@ -4,12 +4,14 @@
   "profileImage": "/src/assets/uploads/placeholder.svg",
   "certificates": [
     {
+      "name": "[Certificate 1 Name]",
       "image": "/src/assets/uploads/placeholder.svg",
-      "description": "[Certificate 1 Name]"
+      "date": "[Date of Certificate]"
     },
     {
+      "name": "[Certificate 2 Name]",
       "image": "/src/assets/uploads/placeholder.svg",
-      "description": "[Certificate 2 Name]"
+      "date": "[Date of Certificate]"
     }
   ]
 }

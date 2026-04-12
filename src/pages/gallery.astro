@@ -39,7 +39,7 @@ const allMedia = import.meta.glob<{ default: any }>('/src/assets/uploads/*.{jpeg
                 {item.type === 'single' && mainImg && (
                   <div class="gallery-item is-single">
                     <Image src={mainImg.default} alt={item.alt} width={800} height={600} />
-                    <div class="image-overlay"><span>Powiększ</span></div>
+                    <div class="image-overlay"><span>Zoom</span></div>
                   </div>
                 )}
 

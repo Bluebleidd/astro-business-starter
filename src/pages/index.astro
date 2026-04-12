@@ -5,7 +5,7 @@ import ShowcaseSlider from '../components/ShowcaseSlider.astro';
 import ServicesSection from '../components/ServicesSection.astro';
 import servicesData from '../data/services.json';
 
-const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/uploads/*.{jpeg,jpg,png,gif,webp,AVIF}');
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/uploads/*.{jpeg,svg,jpg,png,gif,webp,AVIF}');
 
 const heroBefore = images[servicesData.hero_image_before];
 const heroAfter = images[servicesData.hero_image_after];

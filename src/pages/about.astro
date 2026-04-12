@@ -5,7 +5,7 @@ import { marked } from 'marked';
 import { Image } from 'astro:assets';
 
 const parsedDescription = marked.parse(aboutData.description);
-const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/uploads/*.{jpeg,jpg,png,gif,webp,AVIF}');
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/uploads/*.{jpeg,svg,jpg,png,gif,webp,AVIF}');
 
 const profileImageObj = images[aboutData.profileImage] ? await images[aboutData.profileImage]() : null;
 ---
@@ -41,7 +41,7 @@ const profileImageObj = images[aboutData.profileImage] ? await images[aboutData.
     <div class="section-container">
       <section class="certificates">
         <header class="section-title">
-          <h2>Moje Certyfikaty</h2>
+          <h2>[My Certificates]</h2>
         </header>
         
         <div class="certs-grid">
