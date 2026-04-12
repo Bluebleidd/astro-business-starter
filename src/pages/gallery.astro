@@ -2,15 +2,19 @@
 import Layout from '../layouts/Layout.astro';
 import ShowcaseSlider from '../components/ShowcaseSlider.astro';
 import galleryData from '../data/gallery.json';
+import { Image } from 'astro:assets';
+import { ZoomIn, SquarePlay } from 'lucide-astro';
 
 const galleryImages = galleryData.images || [];
-const title = galleryData.title || "Galeria";
+const title = galleryData.title || "Galeria Prac";
 const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych terapii podologicznych.";
+
+const allMedia = import.meta.glob<{ default: any }>('/src/assets/uploads/*.{jpeg,jpg,png,svg,gif,webp,AVIF,mp4,MP4}');
 ---
 
 <Layout 
-  title="[Gallery Page Title] | [Your Company Name]"
-  description="[Gallery page description for SEO.]"
+  title="Galeria Prac i Efekty Zabiegów | AK Studio Nails Rzeszów"
+  description="Zobacz efekty moich terapii podologicznych. Autentyczne zdjęcia 'przed i po' moich pacjentów."
 >
   <div class="section-container">
     <header class="section-title">
@@ -20,69 +24,76 @@ const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych tera
 
     <section class="gallery-container">
       <div class="gallery-grid">
-        {galleryImages.map((item: any) => (
-          <div class="gallery-item-container">
-            <div class="gallery-card">
-              {item.type === 'single' && (
-                <div class="gallery-item is-single">
-                  <img src={item.image} alt={item.alt} loading="lazy" />
-                  <div class="image-overlay">
-                    <span>[Zoom]</span>
-                  </div>
-                </div>
-              )}
+        {galleryImages.map(async (item: any) => {
+          const mainImg = item.image ? await allMedia[item.image]?.() : null;
+          const imgBefore = item.image_before ? await allMedia[item.image_before]?.() : null;
+          const imgAfter = item.image_after ? await allMedia[item.image_after]?.() : null;
+          const videoFile = item.video ? await allMedia[item.video]?.() : null;
+          
+          const fullSrc = videoFile?.default || mainImg?.default?.src || "";
 
-              {item.type === 'before_after' && (
-                <div class="gallery-slider-wrapper">
-                  <ShowcaseSlider 
-                    beforeImage={item.image_before} 
-                    afterImage={item.image_after} 
-                    altText={item.alt} 
-                  />
-                  <div class="expand-hint">
-                    <span>[Zoom]</span>
+          return (
+            <div class="gallery-item-container">
+              <div class="gallery-card">
+                
+                {item.type === 'single' && mainImg && (
+                  <div class="gallery-item is-single">
+                    <Image src={mainImg.default} alt={item.alt} width={800} height={600} />
+                    <div class="image-overlay"><span>Powiększ</span></div>
+                  </div>
+                )}
+
+                {item.type === 'before_after' && imgBefore && imgAfter && (
+                  <div class="gallery-slider-wrapper">
+                    <ShowcaseSlider 
+                      beforeImage={imgBefore.default} 
+                      afterImage={imgAfter.default} 
+                      altText={item.alt} 
+                    />
+                    <div class="expand-hint"><span>Powiększ</span></div>
+                  </div>
+                )}
+                
+                {item.type === 'video' && videoFile && (
+                  <div class="gallery-item is-video" data-video-src={fullSrc}>
+                    <video preload="metadata" muted loop playsinline>
+                      <source src={fullSrc + "#t=0.001"} type="video/mp4" />
+                    </video>
+                    <div class="image-overlay"><span>Odtwórz</span></div>
+                  </div>
+                )}
+                
+                <div class="gallery-content is-clickable-area">
+                  <p class="gallery-item-description">
+                    {item.alt || "Realizacja gabinetu AK Studio Nails"}
+                  </p>
+                  <div class="mobile-icon-only">
+                    {item.type === 'video' ? (
+                      <SquarePlay size={20} strokeWidth={2.5} class="gallery-icon-style" />
+                    ) : (
+                      <ZoomIn size={20} strokeWidth={2.5} class="gallery-icon-style" />
+                    )}
                   </div>
                 </div>
-              )}
-              
-              {item.type === 'video' && (
-                <div class="gallery-item is-video" data-video-src={item.video}>
-                  <video 
-                    preload="metadata"
-                    muted 
-                    loop 
-                    playsinline
-                    controlslist="nodownload"
-                    oncontextmenu="return false;"
-                  >
-                    <source src={`${item.video}#t=0.001`} type="video/mp4" />
-                  </video>
-                  <div class="image-overlay">
-                    <span>[Play]</span>
-                  </div>
-                </div>
-              )}
-              
-              <div class="gallery-content">
-                <p class="gallery-item-description">
-                  {item.alt || "[Default image description]"}
-                </p>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   </div>
 
   <div id="lightbox" class="lightbox">
     <span class="close-lightbox">&times;</span>
-    <img id="lightbox-img" src="" alt="[Enlarged image]" />
+    <img id="lightbox-img" src="" alt="Powiększone zdjęcie" />
     <video 
       id="lightbox-video" 
       src="" 
-      controls 
-      controlslist="nodownload" 
+      controls
+      muted
+      playsinline
+      disablepictureinpicture
+      controlslist="nodownload nofullscreen" 
       oncontextmenu="return false;"
     ></video>
     <div id="lightbox-slider-wrapper"></div>
@@ -107,8 +118,14 @@ const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych tera
   
   .gallery-grid { 
     display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
-    gap: 2.5rem; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 2rem; 
+  }
+
+  @media (max-width: 1024px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   .gallery-card {
@@ -121,10 +138,14 @@ const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych tera
     border: 1px solid rgba(212, 175, 55, 0.2); 
     box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.08);
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    will-change: transform;
+    -webkit-font-smoothing: subpixel-antialiased;
   }
 
   .gallery-card:hover {
-    transform: translateY(-10px) scale(1.02);
+    transform: translateY(-10px);
     box-shadow: 0 25px 50px -20px rgba(0, 0, 0, 0.2);
     border-color: rgba(212, 175, 55, 0.6); 
   }
@@ -136,6 +157,7 @@ const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych tera
     aspect-ratio: 4/3; 
     overflow: hidden;
     cursor: pointer;
+    transform: translateZ(0);
   }
 
   .gallery-item img, 
@@ -146,6 +168,13 @@ const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych tera
     object-fit: cover; 
     display: block;
     transition: transform 0.8s ease; 
+    will-change: transform;
+  }
+
+  video::-webkit-media-controls-mute-button,
+  video::-webkit-media-controls-volume-slider,
+  video::-webkit-media-controls-volume-control-container {
+    display: none !important;
   }
 
   .gallery-slider-wrapper :global(.ba-slider-container) {
@@ -159,20 +188,27 @@ const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych tera
   .gallery-card:hover .gallery-item img, 
   .gallery-card:hover .gallery-item video,
   .gallery-card:hover .gallery-slider-wrapper :global(img) { 
-    transform: scale(1.1); 
+    transform: scale(1.05); 
   }
 
   .gallery-content {
-    padding: 1.5rem 1.2rem;
+    padding: 1.5rem 1.5rem;
     flex-grow: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
     background: linear-gradient(180deg, var(--color-white) 0%, var(--color-lavender-light) 100%);
+    position: relative;
+    min-height: 90px;
+  }
+
+  .is-clickable-area {
+    cursor: pointer;
   }
 
   .gallery-item-description {
-    text-align: center;
     color: var(--color-primary-dark);
     font-size: 0.95rem;
     line-height: 1.5;
@@ -180,6 +216,23 @@ const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych tera
     font-weight: 500;
     font-style: italic;
     opacity: 0.9;
+    max-width: 85%;
+  }
+
+  .gallery-icon-style {
+    color: var(--color-primary-light);
+    background: var(--color-lavender-light);
+    padding: 8px;
+    border-radius: 10px;
+    display: block;
+  }
+
+  .mobile-icon-only {
+    display: none;
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    flex-shrink: 0;
   }
 
   .image-overlay {
@@ -195,6 +248,7 @@ const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych tera
     opacity: 0; 
     transition: opacity 0.3s ease;
     backdrop-filter: blur(3px);
+    will-change: opacity, backdrop-filter;
   }
 
   .gallery-card:hover .image-overlay { 
@@ -296,33 +350,15 @@ const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych tera
       grid-template-columns: 1fr; 
       gap: 1.5rem; 
     }
-
-    .gallery-container { 
-      padding-bottom: 2.5rem; 
-    }
-
-    .gallery-card { 
-      height: auto; 
-      transform: none !important; 
-    }
-
-    .gallery-item, 
-    .gallery-slider-wrapper { 
-      aspect-ratio: 16/10; 
-    }
-
+    .gallery-container { padding-bottom: 2.5rem; }
+    .gallery-card { height: auto; transform: none !important; }
+    .gallery-item, .gallery-slider-wrapper { aspect-ratio: 16/10; }
     .gallery-content { 
-      padding: 1.2rem 1rem; 
+      padding: 1.5rem 2.5rem; 
     }
-
-    .image-overlay { 
-      display: none; 
-    }
-
-    .expand-hint { 
-      opacity: 1; 
-      font-size: 0.75rem; 
-    }
+    .image-overlay { display: none; }
+    .expand-hint { display: none; }
+    .mobile-icon-only { display: flex; }
   }
 
   #lightbox .expand-hint {
@@ -348,6 +384,7 @@ const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych tera
         lightboxVideo.style.display = 'none';
         lightboxVideo.pause();
         lightboxVideo.src = "";
+        lightboxVideo.onvolumechange = null;
       }
       if (lightboxSliderWrapper) lightboxSliderWrapper.style.display = 'none';
     }
@@ -356,72 +393,74 @@ const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych tera
       const singleItem = card.querySelector('.is-single');
       const videoItem = card.querySelector('.is-video');
       const sliderWrapper = card.querySelector('.gallery-slider-wrapper');
-      const expandHint = card.querySelector('.expand-hint');
+      const contentPart = card.querySelector('.is-clickable-area');
 
-      if (singleItem) {
-        singleItem.addEventListener('click', () => {
-          const img = singleItem.querySelector('img');
-          if (img && lightbox && lightboxImg) {
-            hideAllLightboxMedia();
-            lightboxImg.src = img.src;
-            lightboxImg.style.display = 'block';
-            lightbox.classList.add('active');
-            document.body.style.overflow = 'hidden';
-          }
-        });
-      }
-      
-      if (videoItem) {
-        videoItem.addEventListener('click', () => {
-          const videoSrc = (videoItem as HTMLElement).dataset.videoSrc;
-          if (videoSrc && lightbox && lightboxVideo) {
-            hideAllLightboxMedia();
-            lightboxVideo.src = videoSrc;
-            lightboxVideo.style.display = 'block';
-            lightboxVideo.play();
-            lightbox.classList.add('active');
-            document.body.style.overflow = 'hidden';
-          }
-        });
-      }
-
-      if (sliderWrapper) {
-        const triggerSlider = () => {
-          if (lightbox && lightboxSliderWrapper) {
-            hideAllLightboxMedia();
-            currentSliderNode = sliderWrapper as HTMLElement;
-            currentSliderPlaceholder = document.createElement('div');
-            currentSliderPlaceholder.style.display = 'none';
-            
-            sliderWrapper.parentNode?.insertBefore(currentSliderPlaceholder, sliderWrapper);
-            lightboxSliderWrapper.appendChild(sliderWrapper);
-            lightboxSliderWrapper.style.display = 'block';
-            lightbox.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
-          }
-        };
-
-        if (expandHint) {
-          expandHint.addEventListener('click', (e) => { 
-            e.stopPropagation(); 
-            triggerSlider(); 
-          });
+      const triggerSingle = () => {
+        const img = singleItem?.getElementsByTagName('img')[0];
+        if (img && lightbox && lightboxImg) {
+          hideAllLightboxMedia();
+          lightboxImg.src = (img as any).currentSrc || (img as any).src;
+          lightboxImg.style.display = 'block';
+          lightbox.classList.add('active');
+          document.body.style.overflow = 'hidden';
         }
+      };
 
-        sliderWrapper.addEventListener('click', (e) => {
-          if (!(e.target as HTMLElement).classList.contains('ba-range')) {
-            triggerSlider();
-          }
-        });
-      }
+      const triggerVideo = () => {
+        const videoSrc = (videoItem as HTMLElement)?.dataset.videoSrc;
+        if (videoSrc && lightbox && lightboxVideo) {
+          hideAllLightboxMedia();
+          lightboxVideo.src = videoSrc;
+          lightboxVideo.muted = true;
+          lightboxVideo.volume = 0;
+          lightboxVideo.onvolumechange = () => {
+            if (!lightboxVideo.muted || lightboxVideo.volume !== 0) {
+              lightboxVideo.muted = true;
+              lightboxVideo.volume = 0;
+            }
+          };
+          lightboxVideo.style.display = 'block';
+          lightboxVideo.play();
+          lightbox.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      };
+
+      const triggerSlider = () => {
+        if (sliderWrapper && lightbox && lightboxSliderWrapper) {
+          hideAllLightboxMedia();
+          currentSliderNode = sliderWrapper as HTMLElement;
+          currentSliderPlaceholder = document.createElement('div');
+          currentSliderPlaceholder.style.display = 'none';
+          sliderWrapper.parentNode?.insertBefore(currentSliderPlaceholder, sliderWrapper);
+          lightboxSliderWrapper.appendChild(sliderWrapper);
+          lightboxSliderWrapper.style.display = 'block';
+          lightbox.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+        }
+      };
+
+      singleItem?.addEventListener('click', triggerSingle);
+      videoItem?.addEventListener('click', triggerVideo);
+      
+      sliderWrapper?.addEventListener('click', (e) => {
+        if (!(e.target as HTMLElement).classList.contains('ba-range')) {
+          triggerSlider();
+        }
+      });
+
+      contentPart?.addEventListener('click', () => {
+        if (singleItem) triggerSingle();
+        else if (videoItem) triggerVideo();
+        else if (sliderWrapper) triggerSlider();
+      });
     });
 
     function closeLightbox() {
       if (lightbox?.classList.contains('active')) {
         lightbox.classList.remove('active');
         document.body.style.overflow = 'auto';
-        
         if (currentSliderNode && currentSliderPlaceholder) {
           currentSliderPlaceholder.parentNode?.insertBefore(currentSliderNode, currentSliderPlaceholder);
           currentSliderPlaceholder.remove();
@@ -434,11 +473,7 @@ const subtitle = galleryData.subtitle || "Zobacz autentyczne efekty naszych tera
     }
 
     closeBtn?.addEventListener('click', closeLightbox);
-    lightbox?.addEventListener('click', (e) => { 
-      if (e.target === lightbox) closeLightbox(); 
-    });
-    document.addEventListener('keydown', (e) => { 
-      if (e.key === 'Escape') closeLightbox(); 
-    });
+    lightbox?.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
   });
 </script>

@@ -42,7 +42,12 @@ const { title1, title2, features = [] } = Astro.props;
     font-weight: 800; 
     line-height: 1.15; 
   }
-  .highlight { color: #666666; }
+  .highlight { 
+    color: #666666;
+    font-weight: 500;
+    display: inline-block;
+    margin-top: 0.2rem
+    }
   .benefits-list { list-style: none; padding: 0; margin: 0; }
   .benefits-list li {
     display: flex; 

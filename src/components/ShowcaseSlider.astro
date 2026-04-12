@@ -1,31 +1,41 @@
 ---
-export interface Props {
-  beforeImage: string;
-  afterImage: string;
+import { Image } from 'astro:assets';
+
+interface Props {
+  beforeImage: any;
+  afterImage: any;
   altText?: string;
 }
 
-const { beforeImage, afterImage, altText = "Before and after image" } = Astro.props;
+const { beforeImage, afterImage, altText = "[Alt text]" } = Astro.props;
 ---
 
 <div class="ba-slider-container js-ba-container">
-  
   <div class="ba-image ba-image-after">
-    <img src={afterImage} alt={altText} loading="lazy" />
+    <Image 
+      src={afterImage} 
+      alt={`Po: ${altText}`} 
+      width={1000} 
+      height={750} 
+      format="webp"
+      quality="high"
+      loading="lazy" 
+    />
+    <span class="ba-label label-after">AFTER</span>
   </div>
 
   <div class="ba-image ba-image-before js-ba-before" style="width: 50%;">
-    <img src={beforeImage} alt={altText} class="js-ba-before-img" loading="lazy" />
-  </div>
-
-  <div class="ba-labels-overlay">
-    <div class="ba-label-mask js-label-mask-before" style="width: 50%;">
-      <span class="ba-label label-before">[Before]</span>
-    </div>
-
-    <div class="ba-label-mask js-label-mask-after" style="width: 50%;">
-      <span class="ba-label label-after">[After]</span>
-    </div>
+    <Image 
+      src={beforeImage} 
+      alt={`Przed: ${altText}`} 
+      class="js-ba-before-img" 
+      width={1000} 
+      height={750} 
+      format="webp"
+      quality="high"
+      loading="lazy" 
+    />
+    <span class="ba-label label-before">BEFORE</span>
   </div>
 
   <input 
@@ -34,16 +44,16 @@ const { beforeImage, afterImage, altText = "Before and after image" } = Astro.pr
     max="100" 
     value="50" 
     class="ba-range js-ba-slider" 
-    aria-label="Before and after slider" 
+    aria-label="Move slider to compare before and after images" 
   />
 
   <div class="ba-handle js-ba-handle" style="left: 50%;">
     <div class="ba-handle-line"></div>
     <div class="ba-handle-button">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="m9 18 6-6-6-6"/>
       </svg>
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(180deg);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(180deg);">
         <path d="m9 18 6-6-6-6"/>
       </svg>
     </div>
@@ -55,10 +65,12 @@ const { beforeImage, afterImage, altText = "Before and after image" } = Astro.pr
     position: relative;
     width: 100%;
     margin: 0 auto;
-    border-radius: 16px;
+    border-radius: var(--radius-lg, 24px);
     overflow: hidden;
-    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
-    aspect-ratio: 4/3;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 4/3; 
+    background-color: var(--color-lavender-dark);
+    contain: layout; 
   }
 
   .ba-image {
@@ -67,83 +79,51 @@ const { beforeImage, afterImage, altText = "Before and after image" } = Astro.pr
     left: 0;
     width: 100%;
     height: 100%;
+    pointer-events: none;
   }
 
-  .ba-image img {
+  .ba-image :global(img) {
     height: 100%;
+    width: 100%;
     object-fit: cover;
     display: block;
     max-width: none;
     position: absolute;
     top: 0;
     left: 0;
-    /* ZMIANA: Usunięto width: 100% ze standardowego obrazka 
-       Szerokością steruje teraz JS i kontener */
+    transition: none !important; 
   }
 
-  .ba-image-after { z-index: 1; }
-  .ba-image-after img { width: 100%; }
+  .ba-image-after {
+    z-index: 1;
+  }
 
   .ba-image-before {
+    width: 50%;
     overflow: hidden;
     z-index: 2;
-    border-right: 1px solid rgba(255, 255, 255, 0.3);
-  }
-  
-  /* DODANE: Wymuszamy na obrazku BEFORE, by zawsze miał szerokość całego kontenera, 
-     niezależnie od tego, jak wąski jest jego ojciec (maska) */
-  .js-ba-before-img {
-      width: 100vw; /* To zostanie nadpisane przez JS na dokładną szerokość w pikselach */
-  }
-
-  .ba-labels-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 3;
-    pointer-events: none;
-  }
-
-  .ba-label-mask {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .js-label-mask-before {
-    left: 0;
-  }
-
-  .js-label-mask-after {
-    right: 0;
+    border-right: 2px solid rgba(255, 255, 255, 0.5);
   }
 
   .ba-label {
     position: absolute;
     top: 20px;
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: rgba(0, 0, 0, 0.75);
     color: var(--color-accent);
-    font-weight: 600; 
-    font-size: 0.9rem;
+    font-weight: 700; 
+    font-size: 0.75rem;
     border: 1px solid var(--color-accent);
-    padding: 10px 24px; 
+    padding: 6px 16px; 
     border-radius: 40px;
     text-transform: uppercase; 
     letter-spacing: 0.1em;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    white-space: nowrap;
+    z-index: 5;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
   }
 
-  .label-before {
-    left: 20px;
-  }
-
-  .label-after {
-    right: 20px;
-  }
+  .label-before { left: 20px; }
+  .label-after { right: 20px; }
 
   .ba-range {
     position: absolute;
@@ -160,9 +140,8 @@ const { beforeImage, afterImage, altText = "Before and after image" } = Astro.pr
   .ba-handle {
     position: absolute;
     top: 0;
-    left: 50%;
     bottom: 0;
-    z-index: 4;
+    z-index: 3;
     pointer-events: none;
     transform: translateX(-50%);
   }
@@ -175,7 +154,7 @@ const { beforeImage, afterImage, altText = "Before and after image" } = Astro.pr
     width: 4px;
     background-color: var(--color-accent);
     transform: translateX(-50%);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   }
 
   .ba-handle-button {
@@ -183,66 +162,73 @@ const { beforeImage, afterImage, altText = "Before and after image" } = Astro.pr
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     background-color: var(--color-primary-dark);
     border: 2px solid var(--color-accent);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    color: var(--color-accent);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
   }
 
   .ba-handle-button svg {
-    width: 20px;
-    height: 20px;
-    margin: -4px;
+    width: 18px;
+    height: 18px;
+    margin: -3px;
   }
 
   @media (max-width: 768px) {
-    .ba-slider-container { border-radius: 12px; }
-    .ba-label { top: 10px; padding: 7px 18px; font-size: 0.75rem; }
+    .ba-label {
+      top: 10px;
+      padding: 4px 12px;
+      font-size: 0.65rem;
+    }
     .label-before { left: 10px; }
     .label-after { right: 10px; }
-    .ba-handle-button { width: 36px; height: 36px; }
+    .ba-handle-button {
+      width: 36px;
+      height: 36px;
+    }
   }
 </style>
 
 <script>
-  const sliders = document.querySelectorAll('.js-ba-container');
-  
-  sliders.forEach(container => {
-    const slider = container.querySelector('.js-ba-slider') as HTMLInputElement;
-    const beforeImageContainer = container.querySelector('.js-ba-before') as HTMLElement;
-    // DODANE: Chwytamy sam tag <img> wewnatrz kontenera BEFORE
-    const beforeImgTag = container.querySelector('.js-ba-before-img') as HTMLImageElement;
-    const handle = container.querySelector('.js-ba-handle') as HTMLElement;
-    const maskBefore = container.querySelector('.js-label-mask-before') as HTMLElement;
-    const maskAfter = container.querySelector('.js-label-mask-after') as HTMLElement;
+  function initSliders() {
+    const containers = document.querySelectorAll('.js-ba-container');
+    
+    containers.forEach(container => {
+      const slider = container.querySelector('.js-ba-slider') as HTMLInputElement;
+      const beforeImage = container.querySelector('.js-ba-before') as HTMLElement;
+      const handle = container.querySelector('.js-ba-handle') as HTMLElement;
+      const beforeImgTag = container.querySelector('.js-ba-before-img') as HTMLImageElement;
 
-    // Funkcja do wymuszania na obrazku BEFORE szerokości całego okna suwaka
-    function syncImageWidth() {
-      if (beforeImgTag && container) {
-        beforeImgTag.style.width = `${(container as HTMLElement).offsetWidth}px`;
-      }
-    }
+      const syncWidth = () => {
+        const width = (container as HTMLElement).offsetWidth;
+        if (beforeImgTag && width > 0) {
+          beforeImgTag.style.width = `${width}px`;
+        }
+      };
 
-    if (slider && beforeImageContainer && handle && maskBefore && maskAfter) {
-      slider.addEventListener('input', (e) => {
-        const target = e.target as HTMLInputElement;
-        const sliderPos = target.value;
-        const sliderPosNum = parseInt(sliderPos);
-
-        beforeImageContainer.style.width = `${sliderPos}%`;
-        handle.style.left = `${sliderPos}%`;
-        maskBefore.style.width = `${sliderPos}%`;
-        maskAfter.style.width = `${100 - sliderPosNum}%`;
+      const resizer = new ResizeObserver(() => {
+        syncWidth();
       });
+      resizer.observe(container);
 
-      window.addEventListener('load', syncImageWidth);
-      window.addEventListener('resize', syncImageWidth);
-      syncImageWidth();
-    }
-  });
+      if (slider && beforeImage && handle) {
+        slider.addEventListener('input', (e) => {
+          const value = (e.target as HTMLInputElement).value;
+          beforeImage.style.width = `${value}%`;
+          handle.style.left = `${value}%`;
+        });
+      }
+
+      syncWidth();
+    });
+  }
+
+  initSliders();
+  document.addEventListener('astro:after-swap', initSliders);
 </script>

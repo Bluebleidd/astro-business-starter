@@ -4,23 +4,23 @@
   "images": [
     {
       "type": "single",
-      "image": "/placeholder.svg",
+      "image": "/src/assets/uploads/placeholder.svg",
       "alt": "[Image description 1]"
     },
     {
       "type": "single",
-      "image": "/placeholder.svg",
+      "image": "/src/assets/uploads/placeholder.svg",
       "alt": "[Image description 2]"
     },
     {
       "type": "single",
-      "image": "/placeholder.svg",
+      "image": "/src/assets/uploads/placeholder.svg",
       "alt": "[Image description 3]"
     },
     {
       "type": "before_after",
-      "image_before": "/placeholder_before.svg",
-      "image_after": "/placeholder_after.svg",
+      "image_before": "/src/assets/uploads/placeholder_before.svg",
+      "image_after": "/src/assets/uploads/placeholder_after.svg",
       "alt": "[BA Image description]"
     }
   ]

@@ -2,8 +2,8 @@
   "title": "[Our Services]",
   "hero_title_1": "[Your Service]",
   "hero_title_2": "[Value proposition and benefits.]",
-  "hero_image_before": "/placeholder_before.svg",
-  "hero_image_after": "/placeholder_after.svg",
+  "hero_image_before": "/src/assets/uploads/placeholder_before.svg",
+  "hero_image_after": "/src/assets/uploads/placeholder_after.svg",
   "hero_features": [
     "[Feature 1]",
     "[Feature 2]",
