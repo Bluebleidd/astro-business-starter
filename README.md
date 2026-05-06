@@ -34,8 +34,6 @@ A high-performance, minimalist Astro template tailored for local service busines
 
 ## Tech Stack
 
-<div align="center">
-
 | Layer | Technology |
 |---|---|
 | Framework | Astro |
@@ -45,8 +43,6 @@ A high-performance, minimalist Astro template tailored for local service busines
 | Content storage | JSON |
 | Icons | lucide-astro |
 | Hosting | Cloudflare Pages |
-
-</div>
 
 ## Project Structure
 
